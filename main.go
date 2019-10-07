@@ -44,13 +44,13 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	// copy example
 	absPath, _ := filepath.Abs(handler.Filename)
 	f, err := os.OpenFile(absPath, os.O_WRONLY|os.O_CREATE, 0666)
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("There's something wrong:", err)
+		}
+	}()
 	if err != nil {
 		panic(err.Error())
-		defer func() {
-			if err := recover(); err != nil {
-				fmt.Println("There's something wrong:", err)
-			}
-		}()
 	}
 	defer f.Close()
 	io.Copy(f, file)
