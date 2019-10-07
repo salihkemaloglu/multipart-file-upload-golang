@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"io"
 	"os"
+	"log"
 	"path/filepath"
 	"github.com/rs/cors"
 	"github.com/spf13/pflag"
@@ -45,7 +46,12 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	absPath, _ := filepath.Abs(handler.Filename)
 	f, err := os.OpenFile(absPath, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
-		respondWithError(w, http.StatusUnsupportedMediaType, err.Error())
+		panic(err.Error())
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println("There's something wrong:", err)
+			}
+		}()
 	}
 	defer f.Close()
 	io.Copy(f, file)
