@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"io"
 	"os"
-	"log"
 	"path/filepath"
 	"github.com/rs/cors"
 	"github.com/spf13/pflag"
